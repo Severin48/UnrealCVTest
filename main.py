@@ -7,6 +7,7 @@ from io import StringIO, BytesIO
 from PIL import Image
 
 imread = plt.imread
+n_frames = 60
 
 
 def imread8(im_file):
@@ -32,8 +33,13 @@ if __name__ == '__main__':
         sys.exit(-1)
 
     try:
-        res = client.request('vget /camera/0/depth png')
+        res = client.request('vget /camera/0/lit png')
         im = read_png(res)
+        window = plt.imshow(im)
+        for _ in range(n_frames):
+            res = client.request('vget /camera/0/lit png')
+            im = read_png(res)
+            window.set_data(im)
 
         # Ground truth acquisition
         objects = client.request('vget /objects')
@@ -42,7 +48,6 @@ if __name__ == '__main__':
         chair_loc = client.request(f'vget /object/{chair}/location')
         print("Chair location:\t", chair_loc)
 
-        plt.imshow(im)
         plt.show()
 
     except Exception as e:
