@@ -1,6 +1,6 @@
 from __future__ import division, absolute_import, print_function
 from unrealcv import client
-import os, sys, time, re, json
+import sys
 import numpy as np
 import cv2
 from io import BytesIO
