@@ -30,8 +30,8 @@ if __name__ == '__main__':
 
     try:
         # Display window setup
-        cv2.namedWindow('UE4 Grid Views', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('UE4 Grid Views', 800, 600)
+        cv2.namedWindow('UE4 Grid View', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('UE4 Grid View', 800, 600)
         elapsed_times = []
 
         while True:
@@ -63,11 +63,12 @@ if __name__ == '__main__':
                 print("Max. FPS: ", int(1000/(sum(elapsed_times)/len(elapsed_times))))
                 elapsed_times = []
             delay_time_ms = max(1, frame_time_ms - int(elapsed_time_ms))
-            if cv2.waitKey(frame_time_ms) == 27:  # 27 is the ESC key
+            if cv2.waitKey(delay_time_ms) == 27:  # 27 is the ESC key
                 break
 
     except Exception as e:
         print(f'An error occurred: {e}')
     finally:
         cv2.destroyAllWindows()
+        client.request('vset /viewmode lit')
         client.disconnect()

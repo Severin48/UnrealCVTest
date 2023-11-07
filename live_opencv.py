@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import, print_function
+import time
 from unrealcv import client
 import sys
 import numpy as np
@@ -29,22 +29,27 @@ if __name__ == '__main__':
 
         # Display the window
         cv2.imshow('UE4 Live View', frame)
+        elapsed_times = []
 
         while True:
+            start_time = time.time()
             # Request the next frame
             res = client.request('vget /camera/0/lit png')
             frame = read_png(res)
             cv2.imshow('UE4 Live View', frame)
 
-            # Break the loop if ESC is pressed
-            if cv2.waitKey(frame_time_ms) == 27:
+            elapsed_time_ms = (time.time() - start_time) * 1000
+            elapsed_times.append(elapsed_time_ms)
+            if len(elapsed_times) > 100:
+                print("Max. FPS: ", int(1000 / (sum(elapsed_times) / len(elapsed_times))))
+                elapsed_times = []
+            delay_time_ms = max(1, frame_time_ms - int(elapsed_time_ms))
+            if cv2.waitKey(delay_time_ms) == 27:  # 27 is the ESC key
                 break
-
-        # Close the window after the loop is finished
-        cv2.destroyAllWindows()
 
     except Exception as e:
         print(f'An error occurred: {e}')
 
     finally:
+        cv2.destroyAllWindows()
         client.disconnect()

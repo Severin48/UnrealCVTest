@@ -1,6 +1,5 @@
-from __future__ import division, absolute_import, print_function
 from unrealcv import client
-import os, sys, time, re, json
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from io import StringIO, BytesIO
